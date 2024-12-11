@@ -1,0 +1,92 @@
+1) SPARK INTRODUCTION:
+    - it is a data processing tool used for big data.
+    - it is distributed in cluster in memory. Cluster is a group of computers which are connected to each other for sharing resources with same objective to work together.
+    - it is faster than hadoop and scalable.
+    - it is used for real time processing
+    - data in hdfs or cloud storage can be processed using spark.
+    - the data is copied between nodes in cluster for processing.
+    - partition is a logical division of data in spark for processing in parallel, having each particioned data copys in different cluster.
+    - spark is written in scala, but can be used in python, java, R, SQL.
+  
+2) SPARK COMPONENTS and ARCHITECTURE:
+    - SPARK CORE: it is the base engine for large scale parallel and distributed data processing.
+    - SPARK SQL: it is used for structured data processing.
+    - SPARK STREAMING: it is used for real time data processing.
+    - MLlib: it is used for machine learning.
+    - GRAPHX: it is used for graph processing.
+    - SPARK ARCHITECTURE: it has driver program which is the main program and worker nodes which are the nodes in cluster where the data is processed.
+    - TUNGSTEN: it is the memory management module in spark.
+    - ESTRUCTURY OF SPARK BY STEP:
+        - STEP 1: create a driver program with spark context. it requests resources from cluster manager, turnning the operation in dags and sending to worker nodes to executor
+        - STEP 2: cluster manager is used to create worker nodes and manage resources such as yarn, mesos, standalone, kubernetes.
+        - STEP 3: executor is created in worker nodes to execute the tasks.
+    - TRANSFORMATION AND ACTION: transformation is the operation on data which is not executed until an action is called. Action is the operation on data which is executed. EACH TRANSFORMATION CREATES A NEW RDD(RESILIENT DISTRIBUTED DATASET - DATAFRAME).
+    - LIST OF TRANSFORMATIONS AND ACTION:
+            1) MAP: it is used to apply a function to each element in RDD.
+            2) FILTER: it is used to filter the elements in RDD.
+            3) FLATMAP: it is used to apply a function to each element in RDD and return a new RDD.
+            4) GROUPBYKEY: it is used to group the elements in RDD by key.
+            5) REDUCEBYKEY: it is used to reduce the elements in RDD by key.
+            6) JOIN: it is used to join two RDDs.
+            7) COGROUP: it is used to group the elements in RDD by key.
+            8) CARTESIAN: it is used to find the cartesian product of two RDDs.
+            9) UNION: it is used to find the union of two RDDs.
+            10) DISTINCT: it is used to find the distinct elements in RDD.
+            11) SAMPLE: it is used to find the sample of elements in RDD.
+            12) SORTBYKEY: it is used to sort the elements in RDD by key.
+            13) SUBTRACT: it is used to subtract the elements in RDD.
+            14) INTERSECTION: it is used to find the intersection of two RDDs.
+            15) COALESCE: it is used to reduce the number of partitions in RDD.
+            16) REPARTITION: it is used to increase the number of partitions in RDD.
+            17) COLLECT: it is used to collect the elements in RDD.
+            18) COUNT: it is used to count the elements in RDD.
+            19) FIRST: it is used to find the first element in RDD.
+            20) TAKE: it is used to take the first n elements in RDD.
+            21) TAKEORDERED: it is used to take the first n elements in RDD in order.
+            22) SAVEASTEXTFILE: it is used to save the RDD as text file.
+            23) SAVEASSEQUENCEFILE: it is used to save the RDD as sequence file.
+    - COMPONENTS OF SPARK:
+            1) TAKS: it is the unit of work in spark.
+            2) STAGE: it is a group of tasks.
+            3) JOB: it is a group of stages.
+            - OVERVIEW: a driver creates a job, job creates stages, stages creates tasks, tasks are executed in worker nodes particioned.
+      
+              
+3) Context e Session with examples: 
+    - CONTEXT: it is the entry point to spark core functionality. it is used to create RDD, accumulators, broadcast variables, etc.
+    - SESSION: it is the entry point to spark sql functionality. it is used to create dataframes, datasets, sql tables, etc.
+    - EXAMPLES:
+        - CONTEXT:
+            - from pyspark import SparkContext
+            - sc = SparkContext()
+            - data = [1, 2, 3, 4, 5]
+            - rdd = sc.parallelize(data)
+            - rdd.collect()
+        - SESSION:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+            - df = spark.createDataFrame(data, ['id', 'value'])
+            - df.show()
+
+4) BIG DATA FORMATS WITH EXAMPLE:
+    - AVRO: it is a row oriented format. it is used for serialization and deserialization of data. it is used for data exchange between systems.
+    - PARQUET: it is a column oriented format. it is used for storing data in columnar format. it is used for data processing. BETTER FOR READ
+    - ORC: it is a column oriented format. it is used for storing data in columnar format. it is used for data processing. BETTER FOR WRITE
+    - EXAMPLES:
+        - AVRO:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - df = spark.read.format('avro').load('file.avro')
+            - df.show()
+        - PARQUET:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - df = spark.read.format('parquet').load('file.parquet')
+            - df.show()
+        - ORC:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - df = spark.read.format('orc').load('file.orc')
+            - df.show()
+        
