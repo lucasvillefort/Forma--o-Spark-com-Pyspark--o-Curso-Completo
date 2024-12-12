@@ -194,11 +194,13 @@
 
     - EXAMPLES:
         - from pyspark.sql import SparkSession
-        - spark = SparkSession.builder.appName('example').getOrCreate()
-        - data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
-        - df = spark.createDataFrame(data, ['id', 'value'])
-        - df.show()
+        - spark = SparkSession.builder.appName('example').getOrCreate() -> to create a spark session
+        - schema = "id INT, name STRING " -> to create a schema
+        - datas = [(1, 'John'), (2, 'Jane'), (3, 'Doe')] -> to create a data
+        - df = spark.createDataFrame(datas, schema) -> to create a dataframe
+        - df.show() -> to show the dataframe
         - df.printSchema()
+        - df.schema
         - df.columns
         - df.orderBy('id', ascending=False).show()
         - df.describe().show()
@@ -227,3 +229,38 @@
         - df.write.format('kafka').save('data.kafka')
         - df.write.format('console').save('data.console')
         - df.write.format('memory').save('data.memory
+
+        - from pyspark.sql.functions import sum, avg, count, max, min, mean, stddev, variance, expr
+        - schema2 = "Product STRING , Category STRING, sales INT"
+        - datas2 = [("apple", "fruit", 1), ("orange", "fruit", 2), ("banana", "fruit", 3)]
+        - df2 = spark.createDataFrame(datas2, schema2)
+        - df2.show()
+        - df2.select('Product').show() -> to select a column
+        - df2.select('Product', 'sales', expr('sales * 2').alias('new_sales')).show() -> to select a column and apply a function
+
+9) importing data to spark:
+    - from pyspark.sql import SparkSession
+    - from pyspark.sql.types import *
+    - spark = SparkSession.builder.appName('example').getOrCreate()
+    - df = spark.read.format('csv').option('header', 'true').load('data.csv')
+    - df = spark.read.format('json').load('data.json')
+    - df = spark.read.format('parquet').load('data.parquet')
+    - df = spark.read.format('orc').load('data.orc')
+    - df = spark.read.format('avro').load('data.avro')
+    - df = spark.read.format('jdbc').load('data.jdbc')
+    - df = spark.read.format('text').load('data.txt')
+    - df = spark.read.format('libsvm').load('data.libsvm')
+    - df = spark.read.format('kafka').load('data.kafka')
+    - df = spark.read.format('console').load('data.console')
+    - df = spark.read.format('memory').load('data.memory')
+
+    - schema = 'id INT, nome STRING, status STRING, cidade STRING, vendas INT, data STRING'
+    - despachantes = spark.read.csv('/home/tonycastellamare/Desktop/COURSES/FormaçãoSparkcomPyspark:oCursoCompleto/despachantes.csv', header=False, schema = schema)
+    - despachante_auto_schema = spark.read.load(/home/tonycastellamare/Desktop/COURSES/FormaçãoSparkcomPyspark:oCursoCompleto/despachantes.csv', header=False, format='csv', sep=',', inferSchema=True)
+
+    - from pyspark.sql import functions as Func
+    - despachentes.select('id', 'nome', 'vendas').where((Func.col('vendas') > 1) & (Func.col('vendas') < 3)).show()
+    - new_despachantes = despachantes.withColumnRenamed('vendas', 'vendas_total').show()
+    - despachantes2 = despachantes.withColumn('data', Func.to_timestamp(Func.col('data'), 'yyyy-MM-dd')).show()
+    - despachantes.select(year('data')).show()
+    - despachantes.select(month('data')).show()
