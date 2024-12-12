@@ -90,3 +90,140 @@
             - df = spark.read.format('orc').load('file.orc')
             - df.show()
         
+
+5) Using Putty com SSH by host windowns:
+    - download putty in host windows
+    - sudo apt install openssh-server in ghest ubuntu
+    - sudo service ssh start in ghest ubuntu
+    - setting port of my virtual machine. I need to change the port at vitual box settings.
+        Network -> adapter 1 -> advanced -> port forwarding -> port forwarding rules -> add new rule
+            name = ssh, protocol = tcp, host port = 22 guest port = 22
+    - restart the virtual machine and keep it on
+    - open putty and put the ip of the virtual machine and port 22
+    - login with the user and password of the virtual machine
+    - at terminal opeend by putty, I can run the commands of the virtual machine.
+    - pyspark, at terminal, to open the pyspark shell.
+
+6) RDD, Dataset e Dataframe with example. they are structures of data in spark:
+    - RDD: 
+           it is the base abstraction in spark. 
+           it is a distributed collection of objects. 
+           it is immutable and fault tolerant. 
+           it is used for low level api.
+           it is more hard to use than dataset and dataframe.
+           it is the based structure of spark.
+    - DATASET: 
+           it is a distributed collection of objects. 
+           it is immutable and fault tolerant. 
+           it is used for high level api.
+           it is like database table.
+           it is usable only in scala and java.
+    - DATAFRAME: 
+           it is a distributed collection of objects. 
+           it is immutable and fault tolerant. 
+           it is used for high level api.
+           it is like database table with schema.
+           it is more usable for data science.
+           
+    - EXAMPLES:
+        - RDD:
+            - from pyspark import SparkContext
+            - sc = SparkContext()
+            - data = [1, 2, 3, 4, 5]
+            - rdd = sc.parallelize(data)
+            - rdd.collect()
+        - DATASET:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+            - ds = spark.createDataset(data)
+            - ds.show()
+        - DATAFRAME:
+            - from pyspark.sql import SparkSession
+            - spark = SparkSession.builder.appName('example').getOrCreate()
+            - data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+            - df = spark.createDataFrame(data, ['id', 'value'])
+            - df.show()
+
+
+7) RDD with example:
+    data types supported by rdd is: int, float, string, list, tuple, dictionary, set, etc.
+    numbers = sc.parallelize([1,2,3,4,5,6,7,8,9,10]) -> to create an RDD
+    numbers.collect() -> to show the elements of the RDD
+    numbers.count() -> to count the elements of the RDD
+    numbers.countByValue() -> to count the elements of the RDD
+    numbers.first() -> to show the first element of the RDD
+    numbers.take(3) -> to show the first n elements of the RDD
+    numbers.top(3) -> to show the last n elements of the RDD
+    numbers.mean() -> to calculate the mean of the elements of the RDD
+    numbers.takeOrdered(3) -> to show the first n elements of the RDD in order
+    numbers.reduce(lambda x, y: x + y) -> to sum the elements of the RDD
+    numbers.filter(lambda x: x % 2 == 0) -> to filter the elements of the RDD
+    numbers.map(lambda x: x * 2) -> to apply a function to each element of the RDD
+    numbers.flatMap(lambda x: [x, x * 2]) -> to apply a function to each element of the RDD and return a new RDD
+    numbers.groupBy(lambda x: x % 2).collect() -> to group the elements of the RDD by key
+    numbers.groupByKey().mapValues(list).collect() -> to group the elements of the RDD by key
+    numbers.sortBy(lambda x: x, ascending=False).collect() -> to sort the elements of the RDD by key
+    numbers.distinct().collect() -> to find the distinct elements of the RDD
+    numbers.sample(True, 0.5, 1).collect() -> to find the sample of elements of the RDD
+    numbers.union(numbers).collect() -> to find the union of two RDDs
+    numbers.intersection(numbers).collect() -> to find the intersection of two RDDs
+    numbers.subtract(numbers).collect() -> to subtract the elements of the RDD
+    numbers.max() -> to find the maximum element of the RDD
+    numbers.cartesian(numbers).collect() -> to find the cartesian product of two RDDs
+    numbers.coalesce(1).collect() -> to reduce the number of partitions of the RDD
+    numbers.repartition(2).collect() -> to increase the number of partitions of the RDD
+    numbers.saveAsTextFile('numbers.txt') -> to save the RDD as text file
+    numbers.saveAsSequenceFile('numbers.seq') -> to save the RDD as sequence file
+    
+    purchases = sc.parallelize([(1, 'apple', 1.0), (2, 'orange', 2.0), (3, 'banana', 3.0)])
+    keys = purchases.keys()
+    values = purchases.values()
+    purchases.countByKey()
+    sums = purchases.mapValues(lambda x: x + 2)
+    valuesbykey = purchases.groupByKey().mapValues(list)
+    purchases2 = sc.parallelize([(1, 400), (2, 500), (3, 600)])
+    debits = sc.parallelize([(1, 20), (2, 40), (3, 60)])
+    credits = sc.parallelize([(1, 10), (2, 20), (3, 30)])
+    join_debits_credits = debits.join(credits)
+
+8) Dataframe with example:
+    obs: 
+        the schema can be created by own spark or by myself.
+        the schema is the structure of the dataframe.
+
+    - EXAMPLES:
+        - from pyspark.sql import SparkSession
+        - spark = SparkSession.builder.appName('example').getOrCreate()
+        - data = [(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')]
+        - df = spark.createDataFrame(data, ['id', 'value'])
+        - df.show()
+        - df.printSchema()
+        - df.columns
+        - df.orderBy('id', ascending=False).show()
+        - df.describe().show()
+        - df.select('id').show()
+        - df.filter(df['id'] > 2).show()
+        - df.groupBy('id').count().show()
+        - df.agg({'id': 'max'}).show()
+        - df.withColumn('id2', df['id'] * 2).show()
+        - df.withColumnRenamed('id', 'id2').show()
+        - df.drop('id').show()
+        - df.sort('id', ascending=False).show()
+        - df.join(df, df['id'] == df['id'], 'inner').show()
+        - df.union(df).show()
+        - df.distinct().show()
+        - df.sample(False, 0.5, 1).show()
+        - df.repartition(2).show()
+        - df.coalesce(1).show()
+        - df.write.format('csv').save('data.csv')
+        - df.write.format('json').save('data.json')
+        - df.write.format('parquet').save('data.parquet')
+        - df.write.format('orc').save('data.orc')
+        - df.write.format('avro').save('data.avro')
+        - df.write.format('jdbc').save('data.jdbc')
+        - df.write.format('text').save('data.txt')
+        - df.write.format('libsvm').save('data.libsvm')
+        - df.write.format('kafka').save('data.kafka')
+        - df.write.format('console').save('data.console')
+        - df.write.format('memory').save('data.memory
