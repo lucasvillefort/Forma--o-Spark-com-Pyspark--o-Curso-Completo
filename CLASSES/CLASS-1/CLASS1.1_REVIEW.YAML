@@ -237,15 +237,18 @@
         - df2.show()
         - df2.select('Product').show() -> to select a column
         - df2.select('Product', 'sales', expr('sales * 2').alias('new_sales')).show() -> to select a column and apply a function
-
+        - despachantes.groupBy('nome') \
+            .agg(Func.sum('vendas').alias('total_sales')) \
+            .orderBy(Func.col('total_sales').desc()) \
+            .show()
 9) importing data to spark:
     - from pyspark.sql import SparkSession
     - from pyspark.sql.types import *
     - spark = SparkSession.builder.appName('example').getOrCreate()
     - df = spark.read.format('csv').option('header', 'true').load('data.csv')
     - df = spark.read.format('json').load('data.json')
-    - df = spark.read.format('parquet').load('data.parquet')
-    - df = spark.read.format('orc').load('data.orc')
+    - df = spark.read.format('parquet').load('data.parquet') -> format more analitycs
+    - df = spark.read.format('orc').load('data.orc') -> format more analitycs
     - df = spark.read.format('avro').load('data.avro')
     - df = spark.read.format('jdbc').load('data.jdbc')
     - df = spark.read.format('text').load('data.txt')
@@ -264,3 +267,26 @@
     - despachantes2 = despachantes.withColumn('data', Func.to_timestamp(Func.col('data'), 'yyyy-MM-dd')).show()
     - despachantes.select(year('data')).show()
     - despachantes.select(month('data')).show()
+    - despachantes.orderBy(col('vendas').desc(), col("cidade").desc()).show()
+    - despachantes.filter(Func.col('vendas') > 50).show()
+
+10) exporting data from spark:
+    - df.write.format('csv').save('/home/course/export_datas/data.csv')
+    - df.write.format('json').save('data.json')
+    - df.write.format('parquet').save('data.parquet')
+    - df.write.format('orc').save('data.orc')
+    - df.write.format('avro').save('data.avro')
+    - df.write.format('jdbc').save('data.jdbc')
+    - df.write.format('text').save('data.txt')
+    - df.write.format('libsvm').save('data.libsvm')
+    - df.write.format('kafka').save('data.kafka')
+    - df.write.format('console').save('data.console')
+    - df.write.format('memory').save('data.memory')
+
+11) to save a dataframe as a table in spark:
+    - df.write.saveAsTable('table_name')
+    - df.write.saveAsTable('table_name', format='parquet', mode='overwrite', partitionBy='column_name')
+    - df.write.saveAsTable('table_name', format='parquet', mode='overwrite', partitionBy='column_name', bucketBy=10, sortBy='column_name')
+    - df.write.saveAsTable('table_name', format='parquet', mode='overwrite', partitionBy='column_name', bucketBy=10, sortBy='column_name', location='path')
+    - df.write.saveAsTable('table_name', format='parquet', mode='overwrite', partitionBy='column_name', bucketBy=10, sortBy='column_name', location='path', properties={'key': 'value'})
+    - despachante.write.option("path", "path").saveAsTable("table_name", mode="overwrite") -> to create a external table
